@@ -1,0 +1,19 @@
+Client - Windows 10 Proffessional, Powershell commands
+
+Configuring IP settings
+> netsh interface ipv4 set address name="INTERFACE_NAME" static CLIENT_IP 255.255.255.0 SERVER_IP
+> netsh interface ipv4 set dns name="INTERFACE_NAME" static SERVER_IP
+
+Turning off firewall	# better if ports have enabled input connection through firewall
+> netsh advfirewall set allprofiles  state off
+
+Check visibility
+> ping DOMAIN.local
+> nslookup DOMAIN.local
+> ping SERVER_IP
+
+Add computer to Active Directory domain
+> Add-Computer -DomainName "DOMAIN_NAME.local" -Credential "DOMAIN\USERNAME" -Restart
+
+To log in local host use ".\LOCAL_USERNAME" as credential
+To log in Active Directory Domain use "DOMAIN/AD_USERNAME" as credential

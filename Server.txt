@@ -1,0 +1,31 @@
+Server / AD controller - Windows Server 2016, Powershell commands
+
+Creating Administrator account
+> net user Administrator "PASSWORD" /add
+> net user Administrator /active:yes
+> net localgroup Administrators Administrator /add
+
+Configuring IP settings:
+> netsh interface ipv4 set address name="INTERFACE_NAME" static SERVER_IP 255.255.255.0  	# in case 24-bit mask
+
+Turning off firewall	# better if ports have enabled input connection through firewall
+> netsh advfirewall set allprofiles  state off
+
+Check visibility
+> ping CLIENT_IP
+
+Installing Active Directory Domain Services # domain ".local" in case local network
+> Install-WindowsFeature -Name AD-Domain-Services -IncludeManagementTools
+> Install-ADDSForest -DomainName "DOMAIN_NAME.local" -DomainNetbiosName "<DOMAIN_NAME>" -SafeModeAdministratorPassword (ConvertTo-SecureString "PASSWORD" 
+-AsPlainText -Force) -InstallDNS -Force
+
+Creating Active Directory Organization Unit
+> New-ADOrganizationUnit -Name "OUNAME" -Path "DC=DOMAIN_NAME,DC=local"
+
+Creating Active Directory user
+> ADD-ADUser -Name "FULLNAME" -GivenName "NAME" -Surname "SURNAME" -SamAccountName "USERNAME" -UserPrincipalName "USERNAME@DOMAIN.local" -AccountPassword (ReadHost -AsSecureString "Enter your password") -Enabled $true -Path "CN=Users,OU=OUNAME,DC=DOMAIN_NAME,DC=local"
+
+Basic "Get" command for AD
+> Get-ADUser -Filter * 									# get all AD users
+> Get-ADGroupMember -Identity "GROUP_NAME"				# get users in group
+> Get-ADOrganizationUnit * | Select-Object "OUNAME"		# get organization units by name
