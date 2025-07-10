@@ -1,0 +1,22 @@
+Client - Ubuntu 22.04, Terminal (Bash) commands
+
+IP setting - temporary way that it is working to restart system.
+>sudo ip addr flush dev wlp1s0
+>sudo ip addr add "	IP_ADDRESS/MASK_BITS" dev "INTERFACE_NAME"
+
+Gateway setting
+>sudo ip route add default via "SERVER_IP_ADDRESS"
+
+DNS setting - add server ip address to resolv.conf file, make sure your domain controller has installed DNS Server Services
+>sudo nano /etc/resolv.conf
+add line> nameserver "SERVER_IP_ADDRESS"
+
+To return previous settings apply netplan.
+> sudo netplan apply
+
+Adding host to domain
+>sudo apt install realmd sssd krb5-user packagekit samba-common-bin adcli
+>sudo realm discover -v "YOUR_DOMAIN_NAME"
+
+If domain was discovered you can log in Active Directory user.
+>sudo realm join -U "AD_USER" -v "YOUR_DOMAIN_NAME"
